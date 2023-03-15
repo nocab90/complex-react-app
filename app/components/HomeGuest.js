@@ -14,7 +14,7 @@ function HomeGuest() {
 
     //First arg - url / Second arg - send what
     try {
-      await Axios.post("http://localhost:8080/register", {
+      await Axios.post("/register", {
         username,
         email,
         password,
