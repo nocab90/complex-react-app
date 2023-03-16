@@ -1,13 +1,14 @@
 import React, { useState, useReducer } from "react";
 import ReactDOM from "react-dom/client";
+import { useImmerReducer } from "use-immer";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 //Setting up baseUrl for Axios requests globally
 import Axios from "axios";
 Axios.defaults.baseURL = "http://localhost:8080";
 
-import StateContext from "./components/StateContext";
-import DispatchContext from "./components/DispatchContext";
+import StateContext from "./StateContext";
+import DispatchContext from "./DispatchContext";
 
 //My components
 import Header from "./components/Header";
@@ -26,7 +27,23 @@ function Main() {
     flashMessages: [],
   };
 
-  function ourReducer(state, action) {
+  //Immer version
+  function ourReducer(draft, action) {
+    switch (action.type) {
+      case "login":
+        draft.loggedIn = true;
+        break;
+      case "logout":
+        draft.loggedIn = false;
+        break;
+      case "flashMessage":
+        draft.flashMessages.push(action.value);
+        break;
+    }
+  }
+
+  //React
+  /* function ourReducer(state, action) {
     switch (action.type) {
       case "login":
         return { loggedIn: true, flashMessages: state.flashMessages };
@@ -38,9 +55,13 @@ function Main() {
           flashMessages: state.flashMessages.concat(action.value),
         };
     }
-  }
+  } */
 
-  const [state, dispatch] = useReducer(ourReducer, initialState);
+  //React useReducer
+  // const [state, dispatch] = useReducer(ourReducer, initialState);
+
+  //Immer's useReducer
+  const [state, dispatch] = useImmerReducer(ourReducer, initialState);
 
   const [loggedIn, setLoggedIn] = useState(
     Boolean(localStorage.getItem("complexappToken"))

@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import Page from "./Page";
 import Axios from "axios";
-import DispatchContext from "./DispatchContext";
+import DispatchContext from "../DispatchContext";
 
 function CreatePost(props) {
   const [title, setTitle] = useState();
