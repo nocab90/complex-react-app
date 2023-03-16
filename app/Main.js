@@ -16,6 +16,7 @@ import Terms from "./components/Terms";
 import CreatePost from "./components/CreatePost";
 import ViewSinglePost from "./components/ViewSinglePost";
 import FlashMessages from "./components/FlashMessages";
+import ExampleContext from "./ExampleContext";
 
 function Main() {
   const [loggedIn, setLoggedIn] = useState(
@@ -27,24 +28,24 @@ function Main() {
     setFlashMessages((prev) => prev.concat(msg));
   }
 
+  //Context Provider - Any component within the provide can access values or methods passed into it
   return (
-    <BrowserRouter>
-      <FlashMessages messages={flashMessages} />
-      <Header loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
+    <ExampleContext.Provider value={{ addFlashMessage, setLoggedIn }}>
+      <BrowserRouter>
+        <FlashMessages messages={flashMessages} />
+        <Header loggedIn={loggedIn} />
 
-      <Routes>
-        <Route path="/" element={loggedIn ? <Home /> : <HomeGuest />} />
-        <Route
-          path="/create-post"
-          element={<CreatePost addFlashMessage={addFlashMessage} />}
-        ></Route>
-        <Route path="/about-us" element={<About />} />
-        <Route path="/terms" element={<Terms />} />
-        <Route path="/post/:id" element={<ViewSinglePost />}></Route>
-      </Routes>
+        <Routes>
+          <Route path="/" element={loggedIn ? <Home /> : <HomeGuest />} />
+          <Route path="/create-post" element={<CreatePost />}></Route>
+          <Route path="/about-us" element={<About />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/post/:id" element={<ViewSinglePost />}></Route>
+        </Routes>
 
-      <Footer />
-    </BrowserRouter>
+        <Footer />
+      </BrowserRouter>
+    </ExampleContext.Provider>
   );
 }
 
