@@ -1,4 +1,4 @@
-import React, { useState, useReducer } from "react";
+import React, { useState, useReducer, useEffect } from "react";
 import ReactDOM from "react-dom/client";
 import { useImmerReducer } from "use-immer";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -25,6 +25,11 @@ function Main() {
   const initialState = {
     loggedIn: Boolean(localStorage.getItem("complexappToken")),
     flashMessages: [],
+    user: {
+      token: localStorage.getItem("complexappToken"),
+      username: localStorage.getItem("complexappUsername"),
+      avatar: localStorage.getItem("complexappAvatar"),
+    },
   };
 
   //Immer version
@@ -32,6 +37,7 @@ function Main() {
     switch (action.type) {
       case "login":
         draft.loggedIn = true;
+        draft.user = action.data;
         break;
       case "logout":
         draft.loggedIn = false;
@@ -62,6 +68,18 @@ function Main() {
 
   //Immer's useReducer
   const [state, dispatch] = useImmerReducer(ourReducer, initialState);
+
+  useEffect(() => {
+    if (state.loggedIn) {
+      localStorage.setItem("complexappToken", state.user.token);
+      localStorage.setItem("complexappUsername", state.user.username);
+      localStorage.setItem("complexappAvatar", state.user.avatar);
+    } else {
+      localStorage.removeItem("complexappToken");
+      localStorage.removeItem("complexappUsername");
+      localStorage.removeItem("complexappAvatar");
+    }
+  }, [state.loggedIn]);
 
   const [loggedIn, setLoggedIn] = useState(
     Boolean(localStorage.getItem("complexappToken"))
